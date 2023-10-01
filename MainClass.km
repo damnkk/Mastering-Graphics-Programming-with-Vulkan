@@ -1,0 +1,761 @@
+{
+    "root": {
+        "data": {
+            "id": "cvo6r7o0piw0",
+            "created": 1695257855890,
+            "text": "GpuDevice",
+            "note": "GpuDevice是一个十分完善的类,甚至可以理解为所谓的上下文,它囊括了逻辑设备、物理设备、以及资源管理相关的所有事情。\n它内部有多种的资源池,资源池对象提供获取资源的接口,而引擎本身与资源的链接通过resourceHandle来实现,所谓资源句柄其实就是一个uint索引,资源池根据索引从管理的内存当中返回对应资源对象的指针。\n现在感觉这个绘制流程更加复杂,多线程的绘制不光是在recordCommandBuffer的时候可以多线程,GPU端执行队列的时候可以多线程,现在一个swapChainImage也会有多个线程负责绘制,这也太离谱了。"
+        },
+        "children": [
+            {
+                "data": {
+                    "id": "cvo6sewxp4g0",
+                    "created": 1695257950031,
+                    "text": "Resource create/destroy",
+                    "note": "资源的释放方式提供了两种:\n一种是延时释放,将待释放的资源存放在一个队列或数组当中,在合适的时机进行释放。\n另一种是立即释放,直接进行释放;\n"
+                },
+                "children": [
+                    {
+                        "data": {
+                            "id": "cvo6smf79u80",
+                            "created": 1695257966373,
+                            "text": "buffer"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvo6spd76400",
+                            "created": 1695257972782,
+                            "text": "texture"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvo6sqee3kw0",
+                            "created": 1695257975031,
+                            "text": "pipeline"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvo6sroo5ig0",
+                            "created": 1695257977830,
+                            "text": "sampler"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvo6sshpogo0",
+                            "created": 1695257979586,
+                            "text": "descriptorSetLayout"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvo6t6c01680",
+                            "created": 1695258009715,
+                            "text": "descriptorSet"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvo6tah6glk0",
+                            "created": 1695258018736,
+                            "text": "renderPass"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvo6td835400",
+                            "created": 1695258024716,
+                            "text": "shaderState"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvo73euz3rk0",
+                            "created": 1695258811918,
+                            "text": "swapChain"
+                        },
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "data": {
+                    "id": "cvo6x9wtpuo0",
+                    "created": 1695258330961,
+                    "text": "query",
+                    "note": "传入资源句柄和一个资源描述结构,通过句柄获取资源,之后返回这个资源相关的属性,后期可能Debug用。",
+                    "expandState": "expand"
+                },
+                "children": [
+                    {
+                        "data": {
+                            "id": "cvo6xz04wdc0",
+                            "created": 1695258385581,
+                            "text": "buffer"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvo6y07hwyo0",
+                            "created": 1695258388203,
+                            "text": "texture"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvo6y0p26e80",
+                            "created": 1695258389265,
+                            "text": "pipeline"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvo6y10zogg0",
+                            "created": 1695258389986,
+                            "text": "sampler"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvo6yapast40",
+                            "created": 1695258411047,
+                            "text": "descriptorSetLayout"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvo6ycrvl6o0",
+                            "created": 1695258415557,
+                            "text": "descriptorSet"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvo6ygbkl0g0",
+                            "created": 1695258423278,
+                            "text": "shaderState"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvo6zzupa0o0",
+                            "created": 1695258544158,
+                            "text": "renderPassOutput",
+                            "note": "是一个结构体,里面主要是一个renderpass颜色或是深度组件的imageFormat。\n"
+                        },
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "data": {
+                    "id": "cvo70rcyh8g0",
+                    "created": 1695258604035,
+                    "text": "update相关"
+                },
+                "children": [
+                    {
+                        "data": {
+                            "id": "cvo70vxiua80",
+                            "created": 1695258613985,
+                            "text": "resizeOutPutTex"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvo71544t0g0",
+                            "created": 1695258633976,
+                            "text": "updateDescriptorSet"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvo71pic8bk0",
+                            "created": 1695258678371,
+                            "text": "resizeSwapChain"
+                        },
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "data": {
+                    "id": "cvo73p256680",
+                    "created": 1695258834120,
+                    "text": "内存相关",
+                    "note": "映射和非映射是基于VMA"
+                },
+                "children": [
+                    {
+                        "data": {
+                            "id": "cvo73sdb6nc0",
+                            "created": 1695258841325,
+                            "text": "map"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvo73vpcciw0",
+                            "created": 1695258848583,
+                            "text": "unmap"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvo761m4wjk0",
+                            "created": 1695259018178,
+                            "text": "动态分配(不知道是干嘛的)"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvo766o4wio0",
+                            "created": 1695259029183,
+                            "text": "给内存设置偏移量(不知道是干嘛的)"
+                        },
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "data": {
+                    "id": "cvo77esyz880",
+                    "created": 1695259125254,
+                    "text": "command相关"
+                },
+                "children": [
+                    {
+                        "data": {
+                            "id": "cvo77kn0bnc0",
+                            "created": 1695259137954,
+                            "text": "getCommandBuffer",
+                            "note": "从commandBufferRing当中获取,而这个commandBufferRing底层维护多个commandPool,多个是指每个交换链一个还是什么情况现在具体的不懂。"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvo799tub200",
+                            "created": 1695259271151,
+                            "text": "getInstantCommandBuffer",
+                            "note": "暂时理解为是一个Image Transition之类这种singletime commandBuffer。"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvo7ac3n92w0",
+                            "created": 1695259354462,
+                            "text": "queueCommandBuffer",
+                            "note": "感觉是把这些commandBuffer放到一个提交的队列中,最终的提交是从这里提取指令,而不是单独对commandBuffer对象操作。"
+                        },
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "data": {
+                    "id": "cvo7b738do80",
+                    "created": 1695259421917,
+                    "text": "Rendering"
+                },
+                "children": [
+                    {
+                        "data": {
+                            "id": "cvo7erdyqqo0",
+                            "created": 1695259701194,
+                            "text": "newFrame",
+                            "note": "这个函数主要负责新一帧图像开始的初始化准备工作,比如等待currentFrame能不能画了。\n一个不知道的新知识点,每一帧开始前,更新描述符集"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvo7i0vm95s0",
+                            "created": 1695259956945,
+                            "text": "present",
+                            "note": "一些同步,一些呈现,一些捕获窗口大小变动,重建交换链,帧计数的操作。"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvo7jelifug0",
+                            "created": 1695260065173,
+                            "text": "resize"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvo7jjbh5i80",
+                            "created": 1695260075450,
+                            "text": "setPresentationMode"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvo7kbxutmo0",
+                            "created": 1695260137753,
+                            "text": "get_fullscreen_vertex_buffer",
+                            "note": "用于延迟渲染的buffer对象"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvo7kquvvds0",
+                            "created": 1695260170225,
+                            "text": "getSwapChainPass"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvo7l422y7s0",
+                            "created": 1695260198959,
+                            "text": "getDummyTexture(暂时不知道是干啥的)"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvo7lavpzg80",
+                            "created": 1695260213811,
+                            "text": "getSwapChainOutput"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvo7n40jryo0",
+                            "created": 1695260355594,
+                            "text": "getVulkanRenderPass",
+                            "note": "根据别处拿到的renderPassOutput(也就是一堆颜色|深度组件的imageFormat集合)根据这个就能从哈希表中寻找对应的renderpass对象,能拿到就拿,拿不到就根据名字创建一个,然后存到哈希表里返回新的renderPass。\n第二个明白,我们之前从论坛当中看到的,可以从验证层当中log到出异常的对象的名字,这个是通过debug扩展实现的,是有这么一套代码来设置这些东西,然后才能输出,这也是为什么当时我们简单利用GPT给的代码,但是无法输出任何名字,就是因为我们其实根本没有设置。"
+                        },
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "data": {
+                    "id": "cvo8ln1wo8o0",
+                    "created": 1695263061417,
+                    "text": "Debug",
+                    "note": "主要是进行一些Debug设置,可以设置资源名,可以设置一些Debug颜色。",
+                    "expandState": "expand"
+                },
+                "children": [
+                    {
+                        "data": {
+                            "id": "cvo8lqd5d7s0",
+                            "created": 1695263068627,
+                            "text": "setResourceName"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvo8luvfe9c0",
+                            "created": 1695263078439,
+                            "text": "pushMarker"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvo8m4oqhb40",
+                            "created": 1695263099802,
+                            "text": "endMarker"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvo8plmpgio0",
+                            "created": 1695263371778,
+                            "text": "timeStamp相关",
+                            "note": "这个东西是我之前没见过的一个VK对象\n其实是一个Profile用来在GPU端计算一个drawCall耗时之类的,可以让引擎有个基本的Debug能力。"
+                        },
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "data": {
+                    "id": "cvo8yrhtwio0",
+                    "created": 1695264089821,
+                    "text": "成员属性"
+                },
+                "children": [
+                    {
+                        "data": {
+                            "id": "cvo8yz5mjh40",
+                            "created": 1695264106497,
+                            "text": "一系列ResourcePool"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvo9366x1nc0",
+                            "created": 1695264435269,
+                            "text": "直接用于延迟渲染的顶点缓冲"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvo93f0dhp40",
+                            "created": 1695264454465,
+                            "text": "因为要显示因此必然会有的SwapchainPass",
+                            "note": "单独放出来可以随时获取到"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvpburavrs00",
+                            "created": 1695373799230,
+                            "text": "字符串缓冲(可能时用来存log的)"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvpbvyvnxuw0",
+                            "created": 1695373894089,
+                            "text": "分配器"
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "cvpccmi29ps0",
+                                    "created": 1695375199336,
+                                    "text": "底层自实现的分配器"
+                                },
+                                "children": []
+                            },
+                            {
+                                "data": {
+                                    "id": "cvpccsuhnhc0",
+                                    "created": 1695375213148,
+                                    "text": "Vma分配器"
+                                },
+                                "children": []
+                            }
+                        ]
+                    },
+                    {
+                        "data": {
+                            "id": "cvpbw833i880",
+                            "created": 1695373914129,
+                            "text": "动态资源相关",
+                            "note": "动态资源除了那些动态的内存,还有两个队列,会存储动态的描述符集和动态资源的句柄\n"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvpbx9sgqjk0",
+                            "created": 1695373996204,
+                            "text": "队列commandBuffer",
+                            "note": "使用一个维护一个commandBuffer列表,渲染器的绘制提交只会将commandBuffer加入至这个列表当中。之后具体提交到设备的队列还是要另一个函数来完成。\n此外相关的还有两个uint32来维护正在队列中的commandBuffer和已经分配的commandBuffer。"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvpc0aa8iqg0",
+                            "created": 1695374232371,
+                            "text": "timeStampManager"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvpc0fftacg0",
+                            "created": 1695374243592,
+                            "text": "显示相关"
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "cvpc0ubpvm80",
+                                    "created": 1695374275996,
+                                    "text": "present_mode"
+                                },
+                                "children": []
+                            },
+                            {
+                                "data": {
+                                    "id": "cvpc0xt2pfc0",
+                                    "created": 1695374283576,
+                                    "text": "current_frame"
+                                },
+                                "children": []
+                            },
+                            {
+                                "data": {
+                                    "id": "cvpc119cfko0",
+                                    "created": 1695374291090,
+                                    "text": "previous_frame"
+                                },
+                                "children": []
+                            },
+                            {
+                                "data": {
+                                    "id": "cvpc1ia6ers0",
+                                    "created": 1695374328146,
+                                    "text": "absolute_frame(这个不知道是干啥的)"
+                                },
+                                "children": []
+                            },
+                            {
+                                "data": {
+                                    "id": "cvpc1z9rvmo0",
+                                    "created": 1695374365127,
+                                    "text": "swapchainExtent"
+                                },
+                                "children": []
+                            },
+                            {
+                                "data": {
+                                    "id": "cvpcbi9wfiw0",
+                                    "created": 1695375111771,
+                                    "text": "window_surface"
+                                },
+                                "children": []
+                            },
+                            {
+                                "data": {
+                                    "id": "cvpcbm0w3fs0",
+                                    "created": 1695375119933,
+                                    "text": "surface_format"
+                                },
+                                "children": []
+                            },
+                            {
+                                "data": {
+                                    "id": "cvpcbpkp2a80",
+                                    "created": 1695375127661,
+                                    "text": "present_mode"
+                                },
+                                "children": []
+                            },
+                            {
+                                "data": {
+                                    "id": "cvpcbtc94co0",
+                                    "created": 1695375135858,
+                                    "text": "swapchain"
+                                },
+                                "children": []
+                            },
+                            {
+                                "data": {
+                                    "id": "cvpcby0rzmg0",
+                                    "created": 1695375146048,
+                                    "text": "swapchain_Image_count"
+                                },
+                                "children": []
+                            }
+                        ]
+                    },
+                    {
+                        "data": {
+                            "id": "cvpc2del6ls0",
+                            "created": 1695374395893,
+                            "text": "设置相关",
+                            "note": "一些渲染器状态设置罢了,先不细说"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cvpc4g7lco80",
+                            "created": 1695374558729,
+                            "text": "vkObject"
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "cvpc4ktmtiw0",
+                                    "created": 1695374568768,
+                                    "text": "allocation_callback"
+                                },
+                                "children": []
+                            },
+                            {
+                                "data": {
+                                    "id": "cvpc4xo3e7s0",
+                                    "created": 1695374596732,
+                                    "text": "vulkan_instance"
+                                },
+                                "children": []
+                            },
+                            {
+                                "data": {
+                                    "id": "cvpc51qlm2o0",
+                                    "created": 1695374605590,
+                                    "text": "物理设备"
+                                },
+                                "children": []
+                            },
+                            {
+                                "data": {
+                                    "id": "cvpc557w4y00",
+                                    "created": 1695374613166,
+                                    "text": "物理设备properties"
+                                },
+                                "children": []
+                            },
+                            {
+                                "data": {
+                                    "id": "cvpc5g5pnqg0",
+                                    "created": 1695374636980,
+                                    "text": "逻辑设备"
+                                },
+                                "children": []
+                            },
+                            {
+                                "data": {
+                                    "id": "cvpc65mrpnk0",
+                                    "created": 1695374692430,
+                                    "text": "队列"
+                                },
+                                "children": []
+                            },
+                            {
+                                "data": {
+                                    "id": "cvpc69547d40",
+                                    "created": 1695374700070,
+                                    "text": "队列族"
+                                },
+                                "children": []
+                            },
+                            {
+                                "data": {
+                                    "id": "cvpc6cjv9140",
+                                    "created": 1695374707492,
+                                    "text": "描述符集"
+                                },
+                                "children": []
+                            },
+                            {
+                                "data": {
+                                    "id": "cvpc6n1m8ew0",
+                                    "created": 1695374730333,
+                                    "text": "sawpChain三件套",
+                                    "expandState": "expand"
+                                },
+                                "children": [
+                                    {
+                                        "data": {
+                                            "id": "cvpc6uld6ow0",
+                                            "created": 1695374746765,
+                                            "text": "swapchainImage"
+                                        },
+                                        "children": []
+                                    },
+                                    {
+                                        "data": {
+                                            "id": "cvpc6zx36v40",
+                                            "created": 1695374758357,
+                                            "text": "swapchain_image_view"
+                                        },
+                                        "children": []
+                                    },
+                                    {
+                                        "data": {
+                                            "id": "cvpc7405m3c0",
+                                            "created": 1695374767250,
+                                            "text": "swapchain_framebuffers"
+                                        },
+                                        "children": []
+                                    }
+                                ]
+                            },
+                            {
+                                "data": {
+                                    "id": "cvpc7h5539k0",
+                                    "created": 1695374795850,
+                                    "text": "queryPool"
+                                },
+                                "children": []
+                            },
+                            {
+                                "data": {
+                                    "id": "cvpc83qoiy80",
+                                    "created": 1695374845041,
+                                    "text": "同步原语(居然出奇的简单)",
+                                    "note": "就是渲染结束semaphore,swapchain图像获取semaphore, 和commandBuffer提取栅栏量"
+                                },
+                                "children": []
+                            },
+                            {
+                                "data": {
+                                    "id": "cvpca0eomlk0",
+                                    "created": 1695374994514,
+                                    "text": "depthImage"
+                                },
+                                "children": []
+                            }
+                        ]
+                    },
+                    {
+                        "data": {
+                            "id": "cvpcdaou0vk0",
+                            "created": 1695375251988,
+                            "text": "Debug"
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "cvpcdghqnp40",
+                                    "created": 1695375264620,
+                                    "text": "debug_callback"
+                                },
+                                "children": []
+                            },
+                            {
+                                "data": {
+                                    "id": "cvpcdlj22080",
+                                    "created": 1695375275583,
+                                    "text": "debug_utils_messenger"
+                                },
+                                "children": []
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "template": "default",
+    "theme": "fresh-blue",
+    "version": "1.4.43"
+}
